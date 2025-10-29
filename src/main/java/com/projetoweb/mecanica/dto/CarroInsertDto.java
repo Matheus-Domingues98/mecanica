@@ -1,6 +1,7 @@
 package com.projetoweb.mecanica.dto;
 
 public class CarroInsertDto {
+
     private String modelo;
     private String marca;
     private Integer anoFabricacao;
