@@ -11,16 +11,26 @@ public class Carro implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_carro")
     private Long id;
 
+    @Column(nullable = false, length = 50)
     private String modelo;
+    
+    @Column(nullable = false, length = 50)
     private String marca;
+    
+    @Column(nullable = false)
     private Integer anoFabricacao;
+    
+    @Column(nullable = false, unique = true, length = 10)
     private String placa;
+    
+    @Column(length = 30)
     private String cor;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
     public Carro() {

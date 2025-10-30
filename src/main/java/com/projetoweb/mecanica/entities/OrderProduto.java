@@ -10,8 +10,13 @@ public class OrderProduto {
     @EmbeddedId
     private OrderProdutoPk id = new OrderProdutoPk();
 
+    @Column(nullable = false, length = 100)
     private String nome;
+    
+    @Column(nullable = false)
     private Double preco;
+    
+    @Column(nullable = false)
     private Integer quantidade;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,7 +37,7 @@ public class OrderProduto {
         this.produto = produto;
 
         this.id.setOrderId(order.getId());
-        this.id.setProdutoId(produto.getId());
+        this.id.setProdutoId(produto.getIdProd());
 
         this.nome = nome;
         this.preco = preco;
@@ -86,7 +91,11 @@ public class OrderProduto {
 
     public void setProduto(Produto produto) {
         this.produto = produto;
-        this.id.setProdutoId(produto.getId());
+        this.id.setProdutoId(produto.getIdProd());
+    }
+
+    public Double subTotalProduto() {
+        return preco * quantidade;
     }
 }
 

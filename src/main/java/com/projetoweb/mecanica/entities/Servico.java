@@ -11,61 +11,89 @@ public class Servico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String nome;
-    private String descricao;
-    private Double preco;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
-    private Duration duracao;
+    @Column(name = "id_servico")
+    private Long idServ;
+    
+    @Column(nullable = false, length = 100)
+    private String nomeServ;
+    
+    @Column(length = 500)
+    private String descricaoServ;
+    
+    @Column(nullable = false)
+    private Double precoServ;
+    
+    @Column(nullable = false)
+    private Duration duracaoServ;
+
+    @Column(nullable = false)
+    private boolean ativo = true;
 
     public Servico() {
     }
 
-    public Servico(Long id, String nome, String descricao, Double preco, Duration duracao) {
-        this.id = id;
-        this.nome = nome;
-        this.descricao = descricao;
-        this.preco = preco;
-        this.duracao = duracao;
+    public Servico(Long idServ, String nomeServ, String descricaoServ, Double precoServ, Duration duracaoServ) {
+        this.idServ = idServ;
+        this.nomeServ = nomeServ;
+        this.descricaoServ = descricaoServ;
+        this.precoServ = precoServ;
+        this.duracaoServ = duracaoServ;
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdServ() {
+        return idServ;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdServ(Long idServ) {
+        this.idServ = idServ;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeServ() {
+        return nomeServ;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeServ(String nomeServ) {
+        this.nomeServ = nomeServ;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getDescricaoServ() {
+        return descricaoServ;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setDescricaoServ(String descricaoServ) {
+        this.descricaoServ = descricaoServ;
     }
 
-    public Double getPreco() {
-        return preco;
+    public Double getPrecoServ() {
+        return precoServ;
     }
 
-    public void setPreco(Double preco) {
-        this.preco = preco;
+    public void setPrecoServ(Double precoServ) {
+        this.precoServ = precoServ;
     }
 
-    public Duration getDuracao() {
-        return duracao;
+    public Duration getDuracaoServ() {
+        return duracaoServ;
     }
 
-    public void setDuracao(Duration duracao) {
-        this.duracao = duracao;
+    public void setDuracaoServ(Duration duracaoServ) {
+        this.duracaoServ = duracaoServ;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public void desativar() {
+        this.ativo = false;
+    }
+
+    public void ativar() {
+        this.ativo = true;
     }
 }
+

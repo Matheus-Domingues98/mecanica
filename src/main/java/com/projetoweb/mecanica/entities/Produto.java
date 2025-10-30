@@ -2,8 +2,6 @@ package com.projetoweb.mecanica.entities;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "tb_produto")
@@ -11,61 +9,76 @@ public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String nome;
-    private Double preco;
-    private Integer quantidadeEstoque;
+    @Column(name = "id_produto")
+    private Long idProd;
+    
+    @Column(nullable = false, length = 100)
+    private String nomeProd;
+    
+    @Column(nullable = false)
+    private Double precoProd;
 
-   @OneToOne(cascade = CascadeType.ALL)
-    private List<Estoque> estoques = new ArrayList<>();
+    @OneToOne(mappedBy = "produto", cascade = CascadeType.ALL)
+    private Estoque estoque;
+
+    @Column(nullable = false)
+    private boolean ativo = true;
 
     public Produto() {
     }
 
-    public Produto(Long id, String nome, Double preco, Integer quantidadeEstoque) {
-        this.id = id;
-        this.nome = nome;
-        this.preco = preco;
-        this.quantidadeEstoque = quantidadeEstoque;
+    public Produto(Long idProd, String nomeProd, Double precoProd, Estoque estoque) {
+        this.idProd = idProd;
+        this.nomeProd = nomeProd;
+        this.precoProd = precoProd;
+        this.estoque = estoque;
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdProd() {
+        return idProd;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdProd(Long idProd) {
+        this.idProd = idProd;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeProd() {
+        return nomeProd;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeProd(String nomeProd) {
+        this.nomeProd = nomeProd;
     }
 
-    public Double getPreco() {
-        return preco;
+    public Double getPrecoProd() {
+        return precoProd;
     }
 
-    public void setPreco(Double preco) {
-        this.preco = preco;
+    public void setPrecoProd(Double precoProd) {
+        this.precoProd = precoProd;
     }
 
-    public List<Estoque> getEstoques() {
-        return estoques;
+    public Estoque getEstoque() {
+        return estoque;
     }
 
-    public void verificarEstoque() {
+    public void setEstoque(Estoque estoque) {
+        this.estoque = estoque;
     }
 
-    public Integer getQuantidadeEstoque() {
-        return quantidadeEstoque;
+    public boolean isAtivo() {
+        return ativo;
     }
 
-    public void setQuantidadeEstoque(Integer quantidadeEstoque) {
-        this.quantidadeEstoque = quantidadeEstoque;
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 
+    public void desativar() {
+        this.ativo = false;
+    }
+
+    public void ativar() {
+        this.ativo = true;
+    }
 }

@@ -13,11 +13,21 @@ public class OrderServico {
     @EmbeddedId
     private OrderServicoPk id = new OrderServicoPk();
 
+    @Column(nullable = false, length = 100)
     private String nome;
+    
+    @Column(nullable = false)
     private Double preco;
+    
+    @Column(length = 500)
     private String descricao;
+    
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @Column(nullable = false)
     private Duration duracao;
+    
+    @Column(nullable = false)
+    private Integer quantidade;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("orderId")
@@ -37,12 +47,13 @@ public class OrderServico {
         this.servico = servico;
 
         this.id.setOrderId(order.getId());
-        this.id.setServicoId(servico.getId());
+        this.id.setServicoId(servico.getIdServ());
 
         this.nome = nome;
         this.preco = preco;
         this.descricao = descricao;
         this.duracao = duracao;
+        this.quantidade = quantidade;
     }
 
     public OrderServicoPk getId() {
@@ -85,6 +96,14 @@ public class OrderServico {
         this.duracao = duracao;
     }
 
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
     public Order getOrder() {
         return order;
     }
@@ -99,5 +118,9 @@ public class OrderServico {
 
     public void setServico(Servico servico) {
         this.servico = servico;
+    }
+
+    public Double subTotalServico() {
+        return  preco * quantidade;
     }
 }

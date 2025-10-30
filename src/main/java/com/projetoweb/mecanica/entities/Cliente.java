@@ -10,18 +10,31 @@ import java.util.Objects;
 @Entity
 @Table(name = "tb_cliente")
 public class Cliente implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_cliente")
     private Long id;
 
+    @Column(name = "nome_cliente", nullable = false, length = 100)
     private String nome;
+    
+    @Column(name = "doc_cliente", nullable = false, unique = true, length = 20)
     private String doc;
+    
+    @Column(name = "telefone_cliente", nullable = false, length = 20)
     private String telefone;
+    
+    @Column(name = "email_cliente", nullable = false, unique = true, length = 100)
     private String email;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Carro> carros = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.PERSIST)
+    private List<Order> orders = new ArrayList<>();
+
+    @Column(nullable = false)
+    private boolean ativo = true;
 
     public Cliente() {
     }
@@ -82,6 +95,14 @@ public class Cliente implements Serializable {
         this.carros = carros;
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -92,5 +113,21 @@ public class Cliente implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public void desativar() {
+        this.ativo = false;
+    }
+
+    public void ativar() {
+        this.ativo = true;
     }
 }
