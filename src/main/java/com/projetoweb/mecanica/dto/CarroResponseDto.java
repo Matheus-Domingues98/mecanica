@@ -1,7 +1,5 @@
 package com.projetoweb.mecanica.dto;
 
-import com.projetoweb.mecanica.entities.Carro;
-
 public class CarroResponseDto {
 
     private Long id;
@@ -10,23 +8,19 @@ public class CarroResponseDto {
     private Integer anoFabricacao;
     private String placa;
     private String cor;
-
-    private Long cliente;
+    private Long clienteId;
 
     public CarroResponseDto() {
     }
 
-    public CarroResponseDto(Carro entity) {
-        this.id = entity.getId();
-        this.modelo = entity.getModelo();
-        this.marca = entity.getMarca();
-        this.anoFabricacao = entity.getAnoFabricacao();
-        this.placa = entity.getPlaca();
-        this.cor = entity.getCor();
-
-        if (entity.getCliente() != null) {
-            this.cliente = entity.getCliente().getId();
-        }
+    public CarroResponseDto(Long id, String modelo, String marca, Integer anoFabricacao, String placa, String cor, Long clienteId) {
+        this.id = id;
+        this.modelo = modelo;
+        this.marca = marca;
+        this.anoFabricacao = anoFabricacao;
+        this.placa = placa;
+        this.cor = cor;
+        this.clienteId = clienteId;
     }
 
     public Long getId() {
@@ -77,11 +71,11 @@ public class CarroResponseDto {
         this.cor = cor;
     }
 
-    public Long getCliente() {
-        return cliente;
+    public Long getClienteId() {
+        return clienteId;
     }
 
-    public void setCliente(Long cliente) {
-        this.cliente = cliente;
+    public void setClienteId(Long clienteId) {
+        this.clienteId = clienteId;
     }
 }

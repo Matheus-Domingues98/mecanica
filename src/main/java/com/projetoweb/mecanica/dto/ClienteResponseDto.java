@@ -1,5 +1,7 @@
 package com.projetoweb.mecanica.dto;
 
+import java.util.List;
+
 public class ClienteResponseDto {
 
     private Long id;
@@ -7,6 +9,8 @@ public class ClienteResponseDto {
     private String doc;
     private String telefone;
     private String email;
+
+    private List<CarroResponseDto> carros;
 
     public ClienteResponseDto() {
     }
@@ -57,5 +61,13 @@ public class ClienteResponseDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<CarroResponseDto> getCarros() {
+        return carros;
+    }
+
+    public void setCarros(List<CarroResponseDto> carros) {
+        this.carros = carros;
     }
 }
