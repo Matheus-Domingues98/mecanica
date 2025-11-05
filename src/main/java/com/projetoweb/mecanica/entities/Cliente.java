@@ -38,7 +38,6 @@ public class Cliente implements Serializable {
 
     public Cliente() {
     }
-
     public Cliente(Long id, String nome, String doc, String telefone, String email) {
         this.id = id;
         this.nome = nome;

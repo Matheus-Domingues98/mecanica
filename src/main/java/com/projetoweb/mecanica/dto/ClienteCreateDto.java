@@ -1,17 +1,20 @@
 package com.projetoweb.mecanica.dto;
 
-import java.util.List;
+public class ClienteCreateDto {
 
-public class ClienteRequestDto {
-
-    private  String nome;
+    private String nome;
+    private String doc;
     private String telefone;
     private String email;
-    private String doc;
 
-    private List<CarroInsertDto> carros;
+    public ClienteCreateDto() {
+    }
 
-    public ClienteRequestDto() {
+    public ClienteCreateDto(String nome, String doc, String telefone, String email) {
+        this.nome = nome;
+        this.doc = doc;
+        this.telefone = telefone;
+        this.email = email;
     }
 
     public String getNome() {
@@ -20,6 +23,14 @@ public class ClienteRequestDto {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getDoc() {
+        return doc;
+    }
+
+    public void setDoc(String doc) {
+        this.doc = doc;
     }
 
     public String getTelefone() {
@@ -36,21 +47,5 @@ public class ClienteRequestDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getDoc() {
-        return doc;
-    }
-
-    public void setDoc(String doc) {
-        this.doc = doc;
-    }
-
-    public List<CarroInsertDto> getCarros() {
-        return carros;
-    }
-
-    public void setCarros(List<CarroInsertDto> carros) {
-        this.carros = carros;
     }
 }

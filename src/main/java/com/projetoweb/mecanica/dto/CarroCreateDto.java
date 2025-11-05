@@ -1,14 +1,26 @@
 package com.projetoweb.mecanica.dto;
 
-public class CarroInsertDto {
+
+
+public class CarroCreateDto {
 
     private String modelo;
     private String marca;
     private Integer anoFabricacao;
     private String placa;
     private String cor;
+    private Long clienteId;
 
-    public CarroInsertDto() {
+    public CarroCreateDto() {
+    }
+
+    public CarroCreateDto(String modelo, String marca, Integer anoFabricacao, String placa, String cor, Long clienteId) {
+        this.modelo = modelo;
+        this.marca = marca;
+        this.anoFabricacao = anoFabricacao;
+        this.placa = placa;
+        this.cor = cor;
+        this.clienteId = clienteId;
     }
 
     public String getModelo() {
@@ -49,5 +61,13 @@ public class CarroInsertDto {
 
     public void setCor(String cor) {
         this.cor = cor;
+    }
+
+    public Long getClienteId() {
+        return clienteId;
+    }
+
+    public void setClienteId(Long clienteId) {
+        this.clienteId = clienteId;
     }
 }

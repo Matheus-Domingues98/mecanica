@@ -1,13 +1,10 @@
 package com.projetoweb.mecanica.services;
 
-import com.projetoweb.mecanica.dto.CarroInsertDto;
-import com.projetoweb.mecanica.dto.CarroResponseDto;
-import com.projetoweb.mecanica.dto.ClienteRequestDto;
+import com.projetoweb.mecanica.dto.ClienteCreateDto;
 import com.projetoweb.mecanica.dto.ClienteResponseDto;
-import com.projetoweb.mecanica.entities.Carro;
 import com.projetoweb.mecanica.entities.Cliente;
-import com.projetoweb.mecanica.repositories.CarroRepository;
 import com.projetoweb.mecanica.repositories.ClienteRepository;
+import mapper.ClienteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,60 +18,32 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    // Metodo de busca - OK
     public List<ClienteResponseDto> findAll() {
-
         List<Cliente> clientes = clienteRepository.findAll();
-
         return clientes.stream()
-                .map(ClienteResponseDto::new)
+                .map(ClienteMapper::toDto)
                 .toList();
     }
 
-    public ClienteResponseDto findById(Long id) {
 
-        Cliente entity = clienteRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Cliente nao encontrado com ID: " + id)
-        );
-
-        return new ClienteResponseDto(entity);
-    }
-
+    // Metodo de busca por documento - OK
     public ClienteResponseDto findByDoc(String doc) {
         Cliente entity = clienteRepository.findByDoc(doc).orElseThrow(
                 () -> new RuntimeException("Cliente nao encontrado com documento: " + doc)
         );
-
-        return new ClienteResponseDto(entity);
+        return ClienteMapper.toDto(entity);
     }
 
 
-    public ClienteResponseDto insert(ClienteRequestDto obj) {
-        Cliente entity = new Cliente(
-                null,
-                obj.getNome(),
-                obj.getDoc(),
-                obj.getTelefone(),
-                obj.getEmail());
-
-        if (obj.getCarros() != null) {
-            for (CarroInsertDto carro : obj.getCarros()) {
-                Carro entityCarro = new Carro(
-                        null,
-                        carro.getModelo(),
-                        carro.getMarca(),
-                        carro.getAnoFabricacao(),
-                        carro.getPlaca(),
-                        carro.getCor(),
-                        entity
-                );
-                entity.getCarros().add(entityCarro);
-            }
-        }
-        Cliente savedCliente = clienteRepository.save(entity);
-
-        return new ClienteResponseDto(savedCliente);
+    // Metodo de insercao - OK
+    public ClienteResponseDto insert(ClienteCreateDto obj) {
+        Cliente entity = ClienteMapper.toEntity(obj);
+        entity = clienteRepository.save(entity);
+        return ClienteMapper.toDto(entity);
     }
 
+    // Metodo de exclusao - OK
     @Transactional
     public void delete(Long id) {
         if (!clienteRepository.existsById(id)) {
@@ -84,29 +53,34 @@ public class ClienteService {
     }
 
 
-    public ClienteResponseDto update(Long id, ClienteResponseDto obj) {
-        Cliente entity = clienteRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Cliente não encontrado com ID: " + id)
-        );
+    // Metodo de atualizacao - OK
+    public ClienteResponseDto update(Long id, ClienteCreateDto obj) {
+        // Busca o cliente pelo ID
+        Cliente entity = findByIdEntity(id);
 
+        // Atualiza os campos
         entity.setNome(obj.getNome());
         entity.setDoc(obj.getDoc());
         entity.setTelefone(obj.getTelefone());
         entity.setEmail(obj.getEmail());
-        /*
-            Se o cliente tiver carros, não há como atualizar essa lista
-            Usa
-            ClienteResponseDto
-            (que tem carros) mas ignora esse campo
-            Decisão necessária:
 
-            Criar ClienteUpdateDto sem carros (se carros não devem ser atualizados por aqui)
-            OU implementar lógica para atualizar carros também
-         */
+        // Salvar
+        entity = clienteRepository.save(entity);
 
-        Cliente updateCliente = clienteRepository.save(entity);
-
-        return new ClienteResponseDto(updateCliente);
+        // Converter para dto
+        return ClienteMapper.toDto(entity);
     }
 
+    // Metodo de busca por ID (publico) - OK
+    public ClienteResponseDto findById(Long id) {
+        Cliente entity = findByIdEntity(id);
+        return ClienteMapper.toDto(entity);
+    }
+
+    // Metodo auxiliar privado para buscar entidade
+    private Cliente findByIdEntity(Long id) {
+        return clienteRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Cliente nao encontrado com ID: " + id)
+        );
+    }
 }

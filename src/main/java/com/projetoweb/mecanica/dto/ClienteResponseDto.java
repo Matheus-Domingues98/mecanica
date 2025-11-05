@@ -1,36 +1,22 @@
 package com.projetoweb.mecanica.dto;
 
-import com.projetoweb.mecanica.entities.Cliente;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class ClienteResponseDto {
 
     private Long id;
     private String nome;
+    private String doc;
     private String telefone;
     private String email;
-    private String doc;
-
-    private List<CarroResponseDto> carros = new ArrayList<>();
 
     public ClienteResponseDto() {
     }
 
-    public ClienteResponseDto(Cliente cliente) {
-        this.id = cliente.getId();
-        this.nome = cliente.getNome();
-        this.telefone = cliente.getTelefone();
-        this.email = cliente.getEmail();
-        this.doc = cliente.getDoc();
-
-        if(cliente.getCarros() != null){
-            this.carros = cliente.getCarros()
-                    .stream().map(CarroResponseDto::new)
-                    .collect(Collectors.toList());
-        }
+    public ClienteResponseDto(Long id, String nome, String doc, String telefone, String email) {
+        this.id = id;
+        this.nome = nome;
+        this.doc = doc;
+        this.telefone = telefone;
+        this.email = email;
     }
 
     public Long getId() {
@@ -49,6 +35,14 @@ public class ClienteResponseDto {
         this.nome = nome;
     }
 
+    public String getDoc() {
+        return doc;
+    }
+
+    public void setDoc(String doc) {
+        this.doc = doc;
+    }
+
     public String getTelefone() {
         return telefone;
     }
@@ -63,21 +57,5 @@ public class ClienteResponseDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getDoc() {
-        return doc;
-    }
-
-    public void setDoc(String doc) {
-        this.doc = doc;
-    }
-
-    public List<CarroResponseDto> getCarros() {
-        return carros;
-    }
-
-    public void setCarros(List<CarroResponseDto> carros) {
-        this.carros = carros;
     }
 }
