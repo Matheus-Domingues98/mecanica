@@ -1,10 +1,10 @@
 package com.projetoweb.mecanica.services;
 
-import com.projetoweb.mecanica.dto.ClienteCreateDto;
-import com.projetoweb.mecanica.dto.ClienteResponseDto;
+import com.projetoweb.mecanica.dto.cliente_dto.ClienteCreateDto;
+import com.projetoweb.mecanica.dto.cliente_dto.ClienteResponseDto;
 import com.projetoweb.mecanica.entities.Cliente;
 import com.projetoweb.mecanica.repositories.ClienteRepository;
-import mapper.ClienteMapper;
+import com.projetoweb.mecanica.mapper.ClienteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +50,13 @@ public class ClienteService {
             throw new RuntimeException("Cliente nao encontrado com ID: " + id);
         }
         clienteRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void inativar(Long id) {
+        Cliente entity = findByIdEntity(id);
+        entity.setAtivo(false);
+        clienteRepository.save(entity);
     }
 
 

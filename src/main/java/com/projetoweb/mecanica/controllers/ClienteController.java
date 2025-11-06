@@ -1,7 +1,7 @@
 package com.projetoweb.mecanica.controllers;
 
-import com.projetoweb.mecanica.dto.ClienteCreateDto;
-import com.projetoweb.mecanica.dto.ClienteResponseDto;
+import com.projetoweb.mecanica.dto.cliente_dto.ClienteCreateDto;
+import com.projetoweb.mecanica.dto.cliente_dto.ClienteResponseDto;
 import com.projetoweb.mecanica.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +57,12 @@ public class ClienteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         clienteService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/inativar/{id}")
+    public ResponseEntity<Void> inativar(@PathVariable Long id) {
+        clienteService.inativar(id);
         return ResponseEntity.noContent().build();
     }
 }

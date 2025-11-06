@@ -1,4 +1,6 @@
-package com.projetoweb.mecanica.dto;
+package com.projetoweb.mecanica.dto.cliente_dto;
+
+import com.projetoweb.mecanica.dto.carro_dto.CarroResponseDto;
 
 import java.util.List;
 

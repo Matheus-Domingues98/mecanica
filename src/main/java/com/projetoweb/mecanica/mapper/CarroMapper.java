@@ -1,7 +1,7 @@
-package mapper;
+package com.projetoweb.mecanica.mapper;
 
-import com.projetoweb.mecanica.dto.CarroCreateDto;
-import com.projetoweb.mecanica.dto.CarroResponseDto;
+import com.projetoweb.mecanica.dto.carro_dto.CarroCreateDto;
+import com.projetoweb.mecanica.dto.carro_dto.CarroResponseDto;
 import com.projetoweb.mecanica.entities.Carro;
 import org.modelmapper.ModelMapper;
 

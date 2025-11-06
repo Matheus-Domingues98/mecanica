@@ -1,7 +1,7 @@
-package mapper;
+package com.projetoweb.mecanica.mapper;
 
-import com.projetoweb.mecanica.dto.ClienteCreateDto;
-import com.projetoweb.mecanica.dto.ClienteResponseDto;
+import com.projetoweb.mecanica.dto.cliente_dto.ClienteCreateDto;
+import com.projetoweb.mecanica.dto.cliente_dto.ClienteResponseDto;
 import com.projetoweb.mecanica.entities.Cliente;
 import org.modelmapper.ModelMapper;
 

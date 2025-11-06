@@ -1,12 +1,12 @@
 package com.projetoweb.mecanica.services;
 
-import com.projetoweb.mecanica.dto.CarroCreateDto;
-import com.projetoweb.mecanica.dto.CarroResponseDto;
+import com.projetoweb.mecanica.dto.carro_dto.CarroCreateDto;
+import com.projetoweb.mecanica.dto.carro_dto.CarroResponseDto;
 import com.projetoweb.mecanica.entities.Carro;
 import com.projetoweb.mecanica.entities.Cliente;
 import com.projetoweb.mecanica.repositories.CarroRepository;
 import com.projetoweb.mecanica.repositories.ClienteRepository;
-import mapper.CarroMapper;
+import com.projetoweb.mecanica.mapper.CarroMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +38,6 @@ public class CarroService {
         );
         return CarroMapper.toDto(entity);
     }
-
 
     // Metodo de insercao - OK
     public CarroResponseDto insert(CarroCreateDto obj) {

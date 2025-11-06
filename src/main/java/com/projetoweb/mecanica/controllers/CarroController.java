@@ -1,7 +1,7 @@
 package com.projetoweb.mecanica.controllers;
 
-import com.projetoweb.mecanica.dto.CarroCreateDto;
-import com.projetoweb.mecanica.dto.CarroResponseDto;
+import com.projetoweb.mecanica.dto.carro_dto.CarroCreateDto;
+import com.projetoweb.mecanica.dto.carro_dto.CarroResponseDto;
 import com.projetoweb.mecanica.services.CarroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

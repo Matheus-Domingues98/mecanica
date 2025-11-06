@@ -1,9 +1,8 @@
-package com.projetoweb.mecanica.dto;
+package com.projetoweb.mecanica.dto.carro_dto;
 
+public class CarroResponseDto {
 
-
-public class CarroCreateDto {
-
+    private Long id;
     private String modelo;
     private String marca;
     private Integer anoFabricacao;
@@ -11,16 +10,25 @@ public class CarroCreateDto {
     private String cor;
     private Long clienteId;
 
-    public CarroCreateDto() {
+    public CarroResponseDto() {
     }
 
-    public CarroCreateDto(String modelo, String marca, Integer anoFabricacao, String placa, String cor, Long clienteId) {
+    public CarroResponseDto(Long id, String modelo, String marca, Integer anoFabricacao, String placa, String cor, Long clienteId) {
+        this.id = id;
         this.modelo = modelo;
         this.marca = marca;
         this.anoFabricacao = anoFabricacao;
         this.placa = placa;
         this.cor = cor;
         this.clienteId = clienteId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getModelo() {

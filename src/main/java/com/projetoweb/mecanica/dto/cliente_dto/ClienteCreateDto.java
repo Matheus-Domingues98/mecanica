@@ -1,4 +1,4 @@
-package com.projetoweb.mecanica.dto;
+package com.projetoweb.mecanica.dto.cliente_dto;
 
 public class ClienteCreateDto {
 
