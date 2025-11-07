@@ -1,18 +1,30 @@
 package com.projetoweb.mecanica.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 public class OrderCreateDto {
 
+    @NotNull(message = "ID do cliente é obrigatório")
     private Long clienteId;
+    
+    @NotNull(message = "ID do carro é obrigatório")
+    private Long carroId;
+    
+    @Valid
     private List<ItemProdutoDto> produtos;
+    
+    @Valid
     private List<ItemServicoDto> servicos;
 
     public OrderCreateDto() {
     }
 
-    public OrderCreateDto(Long clienteId, List<ItemProdutoDto> produtos, List<ItemServicoDto> servicos) {
+    public OrderCreateDto(Long clienteId, Long carroId, List<ItemProdutoDto> produtos, List<ItemServicoDto> servicos) {
         this.clienteId = clienteId;
+        this.carroId = carroId;
         this.produtos = produtos;
         this.servicos = servicos;
     }
@@ -23,6 +35,14 @@ public class OrderCreateDto {
 
     public void setClienteId(Long clienteId) {
         this.clienteId = clienteId;
+    }
+
+    public Long getCarroId() {
+        return carroId;
+    }
+
+    public void setCarroId(Long carroId) {
+        this.carroId = carroId;
     }
 
     public List<ItemProdutoDto> getProdutos() {
@@ -42,7 +62,11 @@ public class OrderCreateDto {
     }
 
     public static class ItemProdutoDto {
+        @NotNull(message = "ID do produto é obrigatório")
         private Long produtoId;
+        
+        @NotNull(message = "Quantidade é obrigatória")
+        @jakarta.validation.constraints.Positive(message = "Quantidade deve ser maior que zero")
         private Integer quantidade;
 
         public ItemProdutoDto() {
@@ -71,7 +95,11 @@ public class OrderCreateDto {
     }
 
     public static class ItemServicoDto {
+        @NotNull(message = "ID do serviço é obrigatório")
         private Long servicoId;
+        
+        @NotNull(message = "Quantidade é obrigatória")
+        @jakarta.validation.constraints.Positive(message = "Quantidade deve ser maior que zero")
         private Integer quantidade;
 
         public ItemServicoDto() {

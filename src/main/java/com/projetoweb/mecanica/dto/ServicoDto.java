@@ -1,12 +1,26 @@
 package com.projetoweb.mecanica.dto;
 
+import jakarta.validation.constraints.*;
+
 public class ServicoDto {
 
     private Long id;
+    
+    @NotBlank(message = "Nome do serviço é obrigatório")
+    @Size(min = 3, max = 100, message = "Nome do serviço deve ter entre 3 e 100 caracteres")
     private String nome;
+    
+    @Size(max = 500, message = "Descrição deve ter no máximo 500 caracteres")
     private String descricao;
+    
+    @NotNull(message = "Preço é obrigatório")
+    @Positive(message = "Preço deve ser maior que zero")
     private Double preco;
+    
+    @NotNull(message = "Duração é obrigatória")
+    @Positive(message = "Duração deve ser maior que zero")
     private Long duracaoMinutos;
+    
     private boolean ativo;
 
     public ServicoDto() {

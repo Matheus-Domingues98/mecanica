@@ -1,14 +1,31 @@
 package com.projetoweb.mecanica.dto.carro_dto;
 
-
+import com.projetoweb.mecanica.validation.PlacaVeiculo;
+import jakarta.validation.constraints.*;
 
 public class CarroCreateDto {
 
+    @NotBlank(message = "Modelo é obrigatório")
+    @Size(min = 2, max = 50, message = "Modelo deve ter entre 2 e 50 caracteres")
     private String modelo;
+    
+    @NotBlank(message = "Marca é obrigatória")
+    @Size(min = 2, max = 50, message = "Marca deve ter entre 2 e 50 caracteres")
     private String marca;
+    
+    @NotNull(message = "Ano de fabricação é obrigatório")
+    @Min(value = 1900, message = "Ano de fabricação deve ser maior ou igual a 1900")
+    @Max(value = 2100, message = "Ano de fabricação deve ser menor ou igual a 2100")
     private Integer anoFabricacao;
+    
+    @NotBlank(message = "Placa é obrigatória")
+    @PlacaVeiculo
     private String placa;
+    
+    @Size(max = 30, message = "Cor deve ter no máximo 30 caracteres")
     private String cor;
+    
+    @NotNull(message = "ID do cliente é obrigatório")
     private Long clienteId;
 
     public CarroCreateDto() {

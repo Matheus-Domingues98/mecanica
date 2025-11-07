@@ -3,6 +3,7 @@ package com.projetoweb.mecanica.controllers;
 import com.projetoweb.mecanica.dto.cliente_dto.ClienteCreateDto;
 import com.projetoweb.mecanica.dto.cliente_dto.ClienteResponseDto;
 import com.projetoweb.mecanica.services.ClienteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<ClienteResponseDto> insert(@RequestBody ClienteCreateDto cliente) {
+    public ResponseEntity<ClienteResponseDto> insert(@Valid @RequestBody ClienteCreateDto cliente) {
 
         ClienteResponseDto dto = clienteService.insert(cliente);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
@@ -48,7 +49,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteResponseDto> update(@PathVariable Long id, @RequestBody ClienteCreateDto obj) {
+    public ResponseEntity<ClienteResponseDto> update(@PathVariable Long id, @Valid @RequestBody ClienteCreateDto obj) {
 
         ClienteResponseDto dto = clienteService.update(id, obj);
         return ResponseEntity.ok().body(dto);

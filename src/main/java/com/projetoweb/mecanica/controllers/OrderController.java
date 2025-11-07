@@ -4,6 +4,7 @@ import com.projetoweb.mecanica.dto.OrderCreateDto;
 import com.projetoweb.mecanica.dto.OrderDto;
 import com.projetoweb.mecanica.entities.enums.OrderStatus;
 import com.projetoweb.mecanica.services.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +51,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderDto> insert(@RequestBody OrderCreateDto dto) {
+    public ResponseEntity<OrderDto> insert(@Valid @RequestBody OrderCreateDto dto) {
         OrderDto createdDto = orderService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

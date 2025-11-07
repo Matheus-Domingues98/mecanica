@@ -73,8 +73,12 @@ public class TestConfig implements CommandLineRunner {
         p1 = produtoRepository.save(p1);
         p2 = produtoRepository.save(p2);
 
-        // Criar Order primeiro
-        Order order1 = new Order(null, c1, null, OrderStatus.RECEBIDO);
+        // Criar Order primeiro (agora com carro)
+        Order order1 = new Order();
+        order1.setCliente(c1);
+        order1.setCarro(car1);
+        order1.setStatus(OrderStatus.RECEBIDO);
+        order1.setAtivo(true);
         order1 = orderRepository.save(order1);  // Salvar order primeiro
         
         // Criar OrderProduto manualmente
@@ -103,9 +107,6 @@ public class TestConfig implements CommandLineRunner {
         
         // Salvar pagamento
         pagamentoRepository.save(pag1);
-
-
-
 
     }
 

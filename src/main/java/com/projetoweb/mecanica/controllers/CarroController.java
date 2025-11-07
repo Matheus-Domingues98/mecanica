@@ -3,6 +3,7 @@ package com.projetoweb.mecanica.controllers;
 import com.projetoweb.mecanica.dto.carro_dto.CarroCreateDto;
 import com.projetoweb.mecanica.dto.carro_dto.CarroResponseDto;
 import com.projetoweb.mecanica.services.CarroService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class CarroController {
     }
 
     @PostMapping
-    public ResponseEntity<CarroResponseDto> insert(@RequestBody CarroCreateDto carro) {
+    public ResponseEntity<CarroResponseDto> insert(@Valid @RequestBody CarroCreateDto carro) {
 
         CarroResponseDto dto = carroService.insert(carro);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
@@ -47,7 +48,7 @@ public class CarroController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CarroResponseDto> update(@PathVariable Long id, @RequestBody CarroCreateDto obj) {
+    public ResponseEntity<CarroResponseDto> update(@PathVariable Long id, @Valid @RequestBody CarroCreateDto obj) {
 
         CarroResponseDto dto = carroService.update(id, obj);
         return ResponseEntity.ok().body(dto);

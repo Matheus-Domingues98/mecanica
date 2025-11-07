@@ -4,6 +4,9 @@ import com.projetoweb.mecanica.dto.OrderCreateDto;
 import com.projetoweb.mecanica.dto.OrderDto;
 import com.projetoweb.mecanica.entities.*;
 import com.projetoweb.mecanica.entities.enums.OrderStatus;
+import com.projetoweb.mecanica.exceptions.BusinessException;
+import com.projetoweb.mecanica.exceptions.EstoqueInsuficienteException;
+import com.projetoweb.mecanica.exceptions.ResourceNotFoundException;
 import com.projetoweb.mecanica.repositories.*;
 import com.projetoweb.mecanica.mapper.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ public class OrderService {
     @Autowired
     private ServicoRepository servicoRepository;
 
+    @Autowired
+    private CarroRepository carroRepository;
+
     @Transactional(readOnly = true)
     public List<OrderDto> findAll() {
         List<Order> orders = orderRepository.findAll();
@@ -41,7 +47,7 @@ public class OrderService {
             throw new IllegalArgumentException("ID nao pode ser nulo");
         }
         Order entity = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido nao encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
         return OrderMapper.toDto(entity);
     }
 
@@ -55,10 +61,23 @@ public class OrderService {
         }
 
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente nao encontrado com ID: " + dto.getClienteId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente", "ID", dto.getClienteId()));
+
+        // Validar e buscar o carro
+        if (dto.getCarroId() == null) {
+            throw new IllegalArgumentException("ID do carro nao pode ser nulo");
+        }
+        Carro carro = carroRepository.findById(dto.getCarroId())
+                .orElseThrow(() -> new ResourceNotFoundException("Carro", "ID", dto.getCarroId()));
+
+        // Validar se o carro pertence ao cliente
+        if (!carro.getCliente().getId().equals(cliente.getId())) {
+            throw new BusinessException("O carro selecionado nao pertence ao cliente informado");
+        }
 
         Order entity = new Order();
         entity.setCliente(cliente);
+        entity.setCarro(carro);
         entity.setStatus(OrderStatus.RECEBIDO);
         entity.setAtivo(true);
 
@@ -76,7 +95,23 @@ public class OrderService {
                 }
 
                 Produto produto = produtoRepository.findById(item.getProdutoId())
-                        .orElseThrow(() -> new RuntimeException("Produto nao encontrado com ID: " + item.getProdutoId()));
+                        .orElseThrow(() -> new ResourceNotFoundException("Produto", "ID", item.getProdutoId()));
+
+                // Validar estoque
+                if (produto.getEstoque() == null) {
+                    throw new BusinessException("Produto sem estoque cadastrado: " + produto.getNomeProd());
+                }
+                
+                if (!produto.getEstoque().temEstoqueSuficiente(item.getQuantidade())) {
+                    throw new EstoqueInsuficienteException(
+                            produto.getNomeProd(),
+                            produto.getEstoque().getQuantidade(),
+                            item.getQuantidade()
+                    );
+                }
+
+                // Decrementar estoque
+                produto.getEstoque().decrementar(item.getQuantidade());
 
                 entity.adicionarProduto(produto, item.getQuantidade());
             }
@@ -93,7 +128,7 @@ public class OrderService {
                 }
 
                 Servico servico = servicoRepository.findById(item.getServicoId())
-                        .orElseThrow(() -> new RuntimeException("Servico nao encontrado com ID: " + item.getServicoId()));
+                        .orElseThrow(() -> new ResourceNotFoundException("Servico", "ID", item.getServicoId()));
 
                 entity.adicionarServico(servico, item.getQuantidade());
             }
@@ -113,7 +148,7 @@ public class OrderService {
         }
 
         Order entity = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido nao encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
 
         entity.setStatus(novoStatus);
         entity = orderRepository.save(entity);
@@ -138,7 +173,7 @@ public class OrderService {
         }
 
         Order entity = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido nao encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
 
         entity.cancelar();
         entity = orderRepository.save(entity);
@@ -153,7 +188,7 @@ public class OrderService {
         }
 
         Order entity = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido nao encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
 
         entity.desativar();
         entity = orderRepository.save(entity);
@@ -168,7 +203,7 @@ public class OrderService {
         }
 
         Order entity = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido nao encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
 
         entity.ativar();
         entity = orderRepository.save(entity);

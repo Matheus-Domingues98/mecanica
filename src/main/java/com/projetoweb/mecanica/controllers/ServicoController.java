@@ -2,6 +2,7 @@ package com.projetoweb.mecanica.controllers;
 
 import com.projetoweb.mecanica.dto.ServicoDto;
 import com.projetoweb.mecanica.services.ServicoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class ServicoController {
     }
 
     @PostMapping
-    public ResponseEntity<ServicoDto> insert(@RequestBody ServicoDto dto) {
+    public ResponseEntity<ServicoDto> insert(@Valid @RequestBody ServicoDto dto) {
         ServicoDto createdDto = servicoService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -46,7 +47,7 @@ public class ServicoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ServicoDto> update(@PathVariable Long id, @RequestBody ServicoDto dto) {
+    public ResponseEntity<ServicoDto> update(@PathVariable Long id, @Valid @RequestBody ServicoDto dto) {
         ServicoDto updatedDto = servicoService.update(id, dto);
         return ResponseEntity.ok().body(updatedDto);
     }

@@ -3,6 +3,8 @@ package com.projetoweb.mecanica.services;
 import com.projetoweb.mecanica.dto.cliente_dto.ClienteCreateDto;
 import com.projetoweb.mecanica.dto.cliente_dto.ClienteResponseDto;
 import com.projetoweb.mecanica.entities.Cliente;
+import com.projetoweb.mecanica.exceptions.DuplicateResourceException;
+import com.projetoweb.mecanica.exceptions.ResourceNotFoundException;
 import com.projetoweb.mecanica.repositories.ClienteRepository;
 import com.projetoweb.mecanica.mapper.ClienteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ public class ClienteService {
     // Metodo de busca por documento - OK
     public ClienteResponseDto findByDoc(String doc) {
         Cliente entity = clienteRepository.findByDoc(doc).orElseThrow(
-                () -> new RuntimeException("Cliente nao encontrado com documento: " + doc)
+                () -> new ResourceNotFoundException("Cliente", "documento", doc)
         );
         return ClienteMapper.toDto(entity);
     }
@@ -38,6 +40,16 @@ public class ClienteService {
 
     // Metodo de insercao - OK
     public ClienteResponseDto insert(ClienteCreateDto obj) {
+        // Verifica se já existe cliente com o mesmo documento
+        if (clienteRepository.findByDoc(obj.getDoc()).isPresent()) {
+            throw new DuplicateResourceException("Cliente", "documento", obj.getDoc());
+        }
+        
+        // Verifica se já existe cliente com o mesmo email
+        if (clienteRepository.findByEmail(obj.getEmail()).isPresent()) {
+            throw new DuplicateResourceException("Cliente", "email", obj.getEmail());
+        }
+        
         Cliente entity = ClienteMapper.toEntity(obj);
         entity = clienteRepository.save(entity);
         return ClienteMapper.toDto(entity);
@@ -47,7 +59,7 @@ public class ClienteService {
     @Transactional
     public void delete(Long id) {
         if (!clienteRepository.existsById(id)) {
-            throw new RuntimeException("Cliente nao encontrado com ID: " + id);
+            throw new ResourceNotFoundException("Cliente", "ID", id);
         }
         clienteRepository.deleteById(id);
     }
@@ -87,7 +99,7 @@ public class ClienteService {
     // Metodo auxiliar privado para buscar entidade
     private Cliente findByIdEntity(Long id) {
         return clienteRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Cliente nao encontrado com ID: " + id)
+                () -> new ResourceNotFoundException("Cliente", "ID", id)
         );
     }
 }

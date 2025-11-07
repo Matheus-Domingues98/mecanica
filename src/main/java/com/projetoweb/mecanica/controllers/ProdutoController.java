@@ -2,6 +2,7 @@ package com.projetoweb.mecanica.controllers;
 
 import com.projetoweb.mecanica.dto.ProdutoDto;
 import com.projetoweb.mecanica.services.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<ProdutoDto> insert(@RequestBody ProdutoDto dto) {
+    public ResponseEntity<ProdutoDto> insert(@Valid @RequestBody ProdutoDto dto) {
         ProdutoDto createdDto = produtoService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -46,7 +47,7 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoDto> update(@PathVariable Long id, @RequestBody ProdutoDto dto) {
+    public ResponseEntity<ProdutoDto> update(@PathVariable Long id, @Valid @RequestBody ProdutoDto dto) {
         ProdutoDto updatedDto = produtoService.update(id, dto);
         return ResponseEntity.ok().body(updatedDto);
     }

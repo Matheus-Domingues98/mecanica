@@ -65,19 +65,57 @@ public class Estoque {
         return Objects.hash(idEstoque, quantidadeEstoque, produto);
     }
 
-    public void venderProduto(Integer quantidade) {
-        if (this.quantidadeEstoque < quantidade) {
-            throw  new IllegalStateException("Quantidade de estoque insuficiente");
-        } else {
-            this.quantidadeEstoque -= quantidade;
+    /**
+     * Decrementa o estoque ao vender/usar um produto
+     * @param quantidade Quantidade a ser decrementada
+     * @throws IllegalStateException se não houver estoque suficiente
+     */
+    public void decrementar(Integer quantidade) {
+        if (quantidade == null || quantidade <= 0) {
+            throw new IllegalArgumentException("Quantidade deve ser maior que zero");
         }
+        if (this.quantidadeEstoque < quantidade) {
+            throw new IllegalStateException("Estoque insuficiente. Disponível: " + this.quantidadeEstoque + ", Solicitado: " + quantidade);
+        }
+        this.quantidadeEstoque -= quantidade;
     }
 
-    public void adicionarEstoque(Integer quantidade) {
-        quantidadeEstoque += quantidade;
+    /**
+     * Incrementa o estoque ao adicionar produtos
+     * @param quantidade Quantidade a ser adicionada
+     */
+    public void incrementar(Integer quantidade) {
+        if (quantidade == null || quantidade <= 0) {
+            throw new IllegalArgumentException("Quantidade deve ser maior que zero");
+        }
+        this.quantidadeEstoque += quantidade;
     }
 
+    /**
+     * Verifica se há estoque suficiente
+     * @param quantidade Quantidade desejada
+     * @return true se houver estoque suficiente
+     */
     public boolean temEstoqueSuficiente(Integer quantidade) {
-        return quantidadeEstoque >= quantidade;
+        return quantidade != null && quantidadeEstoque >= quantidade;
+    }
+
+    /**
+     * Retorna a quantidade disponível em estoque
+     * @return quantidade disponível
+     */
+    public Integer getQuantidade() {
+        return quantidadeEstoque;
+    }
+
+    // Métodos legados - mantidos para compatibilidade
+    @Deprecated
+    public void venderProduto(Integer quantidade) {
+        decrementar(quantidade);
+    }
+
+    @Deprecated
+    public void adicionarEstoque(Integer quantidade) {
+        incrementar(quantidade);
     }
 }

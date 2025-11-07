@@ -8,6 +8,9 @@ public class OrderDto {
 
     private Long id;
     private Long clienteId;
+    private Long carroId;
+    private String carroPlaca;
+    private String carroModelo;
     private OrderStatus status;
     private boolean ativo;
     private List<OrderProdutoDto> produtos;
@@ -16,9 +19,12 @@ public class OrderDto {
     public OrderDto() {
     }
 
-    public OrderDto(Long id, Long clienteId, OrderStatus status, boolean ativo, List<OrderProdutoDto> produtos, List<OrderServicoDto> servicos) {
+    public OrderDto(Long id, Long clienteId, Long carroId, String carroPlaca, String carroModelo, OrderStatus status, boolean ativo, List<OrderProdutoDto> produtos, List<OrderServicoDto> servicos) {
         this.id = id;
         this.clienteId = clienteId;
+        this.carroId = carroId;
+        this.carroPlaca = carroPlaca;
+        this.carroModelo = carroModelo;
         this.status = status;
         this.ativo = ativo;
         this.produtos = produtos;
@@ -39,6 +45,30 @@ public class OrderDto {
 
     public void setClienteId(Long clienteId) {
         this.clienteId = clienteId;
+    }
+
+    public Long getCarroId() {
+        return carroId;
+    }
+
+    public void setCarroId(Long carroId) {
+        this.carroId = carroId;
+    }
+
+    public String getCarroPlaca() {
+        return carroPlaca;
+    }
+
+    public void setCarroPlaca(String carroPlaca) {
+        this.carroPlaca = carroPlaca;
+    }
+
+    public String getCarroModelo() {
+        return carroModelo;
+    }
+
+    public void setCarroModelo(String carroModelo) {
+        this.carroModelo = carroModelo;
     }
 
     public OrderStatus getStatus() {

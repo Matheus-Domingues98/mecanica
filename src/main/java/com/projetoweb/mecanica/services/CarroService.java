@@ -4,6 +4,8 @@ import com.projetoweb.mecanica.dto.carro_dto.CarroCreateDto;
 import com.projetoweb.mecanica.dto.carro_dto.CarroResponseDto;
 import com.projetoweb.mecanica.entities.Carro;
 import com.projetoweb.mecanica.entities.Cliente;
+import com.projetoweb.mecanica.exceptions.DuplicateResourceException;
+import com.projetoweb.mecanica.exceptions.ResourceNotFoundException;
 import com.projetoweb.mecanica.repositories.CarroRepository;
 import com.projetoweb.mecanica.repositories.ClienteRepository;
 import com.projetoweb.mecanica.mapper.CarroMapper;
@@ -34,16 +36,21 @@ public class CarroService {
     // Metodo de busca por Placa - OK
     public CarroResponseDto findByPlaca(String placa) {
         Carro entity = carroRepository.findByPlaca(placa).orElseThrow(
-                () -> new RuntimeException("Carro nao encontrado com a placa: " + placa)
+                () -> new ResourceNotFoundException("Carro", "placa", placa)
         );
         return CarroMapper.toDto(entity);
     }
 
     // Metodo de insercao - OK
     public CarroResponseDto insert(CarroCreateDto obj) {
+        // Verifica se já existe carro com a mesma placa
+        if (carroRepository.findByPlaca(obj.getPlaca()).isPresent()) {
+            throw new DuplicateResourceException("Carro", "placa", obj.getPlaca());
+        }
+        
         // Buscar o cliente pelo ID
         Cliente cliente = clienteRepository.findById(obj.getClienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente nao encontrado com ID: " + obj.getClienteId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente", "ID", obj.getClienteId()));
 
         // Mapear DTO para entidade
         Carro entity = CarroMapper.toEntity(obj);
@@ -58,7 +65,7 @@ public class CarroService {
     @Transactional
     public void delete(Long id) {
         if (!carroRepository.existsById(id)) {
-            throw new RuntimeException("Carro nao encontrado com ID: " + id);
+            throw new ResourceNotFoundException("Carro", "ID", id);
         }
         carroRepository.deleteById(id);
     }
@@ -78,7 +85,7 @@ public class CarroService {
         // Se o clienteId foi alterado, atualizar o relacionamento
         if (obj.getClienteId() != null && !obj.getClienteId().equals(entity.getCliente().getId())) {
             Cliente novoCliente = clienteRepository.findById(obj.getClienteId())
-                    .orElseThrow(() -> new RuntimeException("Cliente nao encontrado com ID: " + obj.getClienteId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Cliente", "ID", obj.getClienteId()));
             entity.setCliente(novoCliente);
         }
 
@@ -98,7 +105,7 @@ public class CarroService {
     // Metodo auxiliar privado para buscar entidade
     private Carro findByIdEntity(Long id) {
         return carroRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Carro nao encontrado com ID: " + id)
+                () -> new ResourceNotFoundException("Carro", "ID", id)
         );
     }
 }

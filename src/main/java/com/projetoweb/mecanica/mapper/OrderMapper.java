@@ -19,6 +19,9 @@ public class OrderMapper {
         }
 
         Long clienteId = order.getCliente() != null ? order.getCliente().getId() : null;
+        Long carroId = order.getCarro() != null ? order.getCarro().getId() : null;
+        String carroPlaca = order.getCarro() != null ? order.getCarro().getPlaca() : null;
+        String carroModelo = order.getCarro() != null ? order.getCarro().getModelo() : null;
 
         List<OrderProdutoDto> produtos = order.getOrderProdutos() != null
                 ? order.getOrderProdutos().stream()
@@ -35,6 +38,9 @@ public class OrderMapper {
         return new OrderDto(
                 order.getId(),
                 clienteId,
+                carroId,
+                carroPlaca,
+                carroModelo,
                 order.getStatus(),
                 order.isAtivo(),
                 produtos,

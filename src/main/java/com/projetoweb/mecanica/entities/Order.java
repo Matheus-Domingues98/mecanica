@@ -19,6 +19,10 @@ public class Order {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "carro_id", nullable = false)
+    private Carro carro;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private OrderStatus status;
@@ -59,6 +63,14 @@ public class Order {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public Carro getCarro() {
+        return carro;
+    }
+
+    public void setCarro(Carro carro) {
+        this.carro = carro;
     }
 
     public Pagamento getPagamento() {
