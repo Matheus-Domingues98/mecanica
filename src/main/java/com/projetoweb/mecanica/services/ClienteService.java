@@ -31,7 +31,10 @@ public class ClienteService {
 
     // Metodo de busca por documento - OK
     public ClienteResponseDto findByDoc(String doc) {
-        Cliente entity = clienteRepository.findByDoc(doc).orElseThrow(
+        // Remove caracteres especiais (pontos, traços, barras) para busca flexível
+        String cleanDoc = doc.replaceAll("[^0-9]", "");
+        
+        Cliente entity = clienteRepository.findByDoc(cleanDoc).orElseThrow(
                 () -> new ResourceNotFoundException("Cliente", "documento", doc)
         );
         return ClienteMapper.toDto(entity);

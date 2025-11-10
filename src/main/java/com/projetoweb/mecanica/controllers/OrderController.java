@@ -2,6 +2,7 @@ package com.projetoweb.mecanica.controllers;
 
 import com.projetoweb.mecanica.dto.OrderCreateDto;
 import com.projetoweb.mecanica.dto.OrderDto;
+import com.projetoweb.mecanica.dto.OrderStatisticsDto;
 import com.projetoweb.mecanica.entities.enums.OrderStatus;
 import com.projetoweb.mecanica.services.OrderService;
 import jakarta.validation.Valid;
@@ -88,5 +89,41 @@ public class OrderController {
     public ResponseEntity<OrderDto> ativar(@PathVariable Long id) {
         OrderDto dto = orderService.ativar(id);
         return ResponseEntity.ok().body(dto);
+    }
+
+    @PatchMapping("/{id}/enviar-aprovacao")
+    public ResponseEntity<OrderDto> enviarParaAprovacao(@PathVariable Long id) {
+        OrderDto dto = orderService.enviarParaAprovacao(id);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PatchMapping("/{id}/aprovar-orcamento")
+    public ResponseEntity<OrderDto> aprovarOrcamento(@PathVariable Long id) {
+        OrderDto dto = orderService.aprovarOrcamento(id);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PatchMapping("/{id}/rejeitar-orcamento")
+    public ResponseEntity<OrderDto> rejeitarOrcamento(@PathVariable Long id) {
+        OrderDto dto = orderService.rejeitarOrcamento(id);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PatchMapping("/{id}/finalizar")
+    public ResponseEntity<OrderDto> finalizar(@PathVariable Long id) {
+        OrderDto dto = orderService.finalizar(id);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PatchMapping("/{id}/entregar")
+    public ResponseEntity<OrderDto> entregar(@PathVariable Long id) {
+        OrderDto dto = orderService.entregar(id);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<OrderStatisticsDto> getStatistics() {
+        OrderStatisticsDto statistics = orderService.getStatistics();
+        return ResponseEntity.ok().body(statistics);
     }
 }

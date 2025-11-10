@@ -2,6 +2,7 @@ package com.projetoweb.mecanica.services;
 
 import com.projetoweb.mecanica.dto.OrderCreateDto;
 import com.projetoweb.mecanica.dto.OrderDto;
+import com.projetoweb.mecanica.dto.OrderStatisticsDto;
 import com.projetoweb.mecanica.entities.*;
 import com.projetoweb.mecanica.entities.enums.OrderStatus;
 import com.projetoweb.mecanica.exceptions.BusinessException;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -111,6 +113,9 @@ public class OrderService {
             }
         }
 
+        // Calcula o valor total do orçamento automaticamente
+        entity.calcularValorTotal();
+        
         entity = orderRepository.save(entity);
         return OrderMapper.toDto(entity);
     }
@@ -196,5 +201,117 @@ public class OrderService {
                 .filter(order -> order.getStatus() == status)
                 .map(OrderMapper::toDto)
                 .toList();
+    }
+
+    @Transactional
+    public OrderDto aprovarOrcamento(Long id) {
+        Order entity = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
+
+        entity.aprovarOrcamento();
+        entity = orderRepository.save(entity);
+
+        return OrderMapper.toDto(entity);
+    }
+
+    @Transactional
+    public OrderDto rejeitarOrcamento(Long id) {
+        Order entity = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
+
+        // Devolve os produtos ao estoque antes de rejeitar
+        if (entity.getOrderProdutos() != null) {
+            for (OrderProduto op : entity.getOrderProdutos()) {
+                if (op.getProduto().getEstoque() != null) {
+                    op.getProduto().getEstoque().incrementar(op.getQuantidade());
+                }
+            }
+        }
+
+        entity.rejeitarOrcamento();
+        entity = orderRepository.save(entity);
+
+        return OrderMapper.toDto(entity);
+    }
+
+    @Transactional
+    public OrderDto enviarParaAprovacao(Long id) {
+        Order entity = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
+
+        if (entity.getStatus() != OrderStatus.EM_DIAGNOSTICO) {
+            throw new BusinessException(
+                    "Apenas ordens com status EM_DIAGNOSTICO podem ser enviadas para aprovação. Status atual: " + entity.getStatus()
+            );
+        }
+
+        entity.setStatus(OrderStatus.AGUARDANDO_APROVACAO);
+        entity = orderRepository.save(entity);
+
+        return OrderMapper.toDto(entity);
+    }
+
+    @Transactional
+    public OrderDto finalizar(Long id) {
+        Order entity = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
+
+        entity.finalizar();
+        entity = orderRepository.save(entity);
+
+        return OrderMapper.toDto(entity);
+    }
+
+    @Transactional
+    public OrderDto entregar(Long id) {
+        Order entity = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
+
+        entity.entregar();
+        entity = orderRepository.save(entity);
+
+        return OrderMapper.toDto(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderStatisticsDto getStatistics() {
+        List<Order> allOrders = orderRepository.findAll();
+
+        long totalOrdens = allOrders.size();
+        long ordensFinalizadas = allOrders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.FINALIZADO || o.getStatus() == OrderStatus.ENTREGUE)
+                .count();
+        long ordensEmAndamento = allOrders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.RECEBIDO || 
+                             o.getStatus() == OrderStatus.EM_DIAGNOSTICO || 
+                             o.getStatus() == OrderStatus.AGUARDANDO_APROVACAO || 
+                             o.getStatus() == OrderStatus.EM_EXECUCAO)
+                .count();
+        long ordensCanceladas = allOrders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.CANCELADO)
+                .count();
+
+        // Calcula tempo médio de execução (dataInicioExecucao até dataFinalizacao)
+        Double tempoMedioExecucao = allOrders.stream()
+                .filter(o -> o.getDataInicioExecucao() != null && o.getDataFinalizacao() != null)
+                .mapToLong(o -> Duration.between(o.getDataInicioExecucao(), o.getDataFinalizacao()).toMinutes())
+                .average()
+                .orElse(0.0);
+
+        // Calcula tempo médio total (dataCriacao até dataFinalizacao)
+        Double tempoMedioTotal = allOrders.stream()
+                .filter(o -> o.getDataCriacao() != null && o.getDataFinalizacao() != null)
+                .mapToLong(o -> Duration.between(o.getDataCriacao(), o.getDataFinalizacao()).toMinutes())
+                .average()
+                .orElse(0.0);
+
+        return new OrderStatisticsDto(
+                totalOrdens,
+                ordensFinalizadas,
+                ordensEmAndamento,
+                ordensCanceladas,
+                tempoMedioExecucao,
+                tempoMedioTotal
+        );
     }
 }

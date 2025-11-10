@@ -3,6 +3,7 @@ package com.projetoweb.mecanica.entities;
 import com.projetoweb.mecanica.entities.enums.OrderStatus;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,26 @@ public class Order {
     @Column(nullable = false)
     private boolean ativo = true;
 
+    @Column(name = "valor_total", nullable = false)
+    private Double valorTotal = 0.0;
+
+    @Column(name = "orcamento_aprovado", nullable = false)
+    private Boolean orcamentoAprovado = false;
+
+    @Column(name = "data_aprovacao")
+    private LocalDateTime dataAprovacao;
+
+    @Column(name = "data_criacao", nullable = false, updatable = false)
+    private LocalDateTime dataCriacao;
+
+    @Column(name = "data_inicio_execucao")
+    private LocalDateTime dataInicioExecucao;
+
+    @Column(name = "data_finalizacao")
+    private LocalDateTime dataFinalizacao;
+
     public Order() {
+        this.dataCriacao = LocalDateTime.now();
     }
 
     public Order(Long id, Cliente cliente, Pagamento pagamento, OrderStatus status) {
@@ -113,6 +133,54 @@ public class Order {
         this.ativo = ativo;
     }
 
+    public Double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+    public Boolean getOrcamentoAprovado() {
+        return orcamentoAprovado;
+    }
+
+    public void setOrcamentoAprovado(Boolean orcamentoAprovado) {
+        this.orcamentoAprovado = orcamentoAprovado;
+    }
+
+    public LocalDateTime getDataAprovacao() {
+        return dataAprovacao;
+    }
+
+    public void setDataAprovacao(LocalDateTime dataAprovacao) {
+        this.dataAprovacao = dataAprovacao;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDateTime getDataInicioExecucao() {
+        return dataInicioExecucao;
+    }
+
+    public void setDataInicioExecucao(LocalDateTime dataInicioExecucao) {
+        this.dataInicioExecucao = dataInicioExecucao;
+    }
+
+    public LocalDateTime getDataFinalizacao() {
+        return dataFinalizacao;
+    }
+
+    public void setDataFinalizacao(LocalDateTime dataFinalizacao) {
+        this.dataFinalizacao = dataFinalizacao;
+    }
+
     public void desativar() {
         this.ativo = false;
     }
@@ -174,7 +242,86 @@ public class Order {
         this.status = OrderStatus.CANCELADO;
     }
 
+    /**
+     * Calcula o valor total do orçamento somando produtos e serviços
+     */
+    public void calcularValorTotal() {
+        double totalProdutos = 0.0;
+        double totalServicos = 0.0;
 
+        if (this.orderProdutos != null) {
+            totalProdutos = this.orderProdutos.stream()
+                    .mapToDouble(OrderProduto::subTotalProduto)
+                    .sum();
+        }
 
-    //podeSerCancelada() - validar se pode cancelar com base no status
+        if (this.orderServicos != null) {
+            totalServicos = this.orderServicos.stream()
+                    .mapToDouble(OrderServico::subTotalServico)
+                    .sum();
+        }
+
+        this.valorTotal = totalProdutos + totalServicos;
+    }
+
+    /**
+     * Aprova o orçamento e muda o status para EM_EXECUCAO
+     */
+    public void aprovarOrcamento() {
+        if (this.status != OrderStatus.AGUARDANDO_APROVACAO) {
+            throw new IllegalStateException(
+                    "Apenas ordens com status AGUARDANDO_APROVACAO podem ser aprovadas. Status atual: " + this.status
+            );
+        }
+        if (this.orcamentoAprovado) {
+            throw new IllegalStateException("Orçamento já foi aprovado anteriormente");
+        }
+
+        this.orcamentoAprovado = true;
+        this.dataAprovacao = LocalDateTime.now();
+        this.dataInicioExecucao = LocalDateTime.now();
+        this.status = OrderStatus.EM_EXECUCAO;
+    }
+
+    /**
+     * Rejeita o orçamento e cancela a ordem
+     */
+    public void rejeitarOrcamento() {
+        if (this.status != OrderStatus.AGUARDANDO_APROVACAO) {
+            throw new IllegalStateException(
+                    "Apenas ordens com status AGUARDANDO_APROVACAO podem ser rejeitadas. Status atual: " + this.status
+            );
+        }
+
+        this.orcamentoAprovado = false;
+        this.status = OrderStatus.CANCELADO;
+        this.desativar();
+    }
+
+    /**
+     * Finaliza a ordem de serviço
+     */
+    public void finalizar() {
+        if (this.status != OrderStatus.EM_EXECUCAO) {
+            throw new IllegalStateException(
+                    "Apenas ordens com status EM_EXECUCAO podem ser finalizadas. Status atual: " + this.status
+            );
+        }
+
+        this.dataFinalizacao = LocalDateTime.now();
+        this.status = OrderStatus.FINALIZADO;
+    }
+
+    /**
+     * Marca a ordem como entregue
+     */
+    public void entregar() {
+        if (this.status != OrderStatus.FINALIZADO) {
+            throw new IllegalStateException(
+                    "Apenas ordens com status FINALIZADO podem ser entregues. Status atual: " + this.status
+            );
+        }
+
+        this.status = OrderStatus.ENTREGUE;
+    }
 }

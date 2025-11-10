@@ -35,8 +35,13 @@ public class ClienteController {
 
     @GetMapping("/doc/{doc}")
     public ResponseEntity<ClienteResponseDto> findByDoc(@PathVariable String doc) {
-
         ClienteResponseDto obj = clienteService.findByDoc(doc);
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @GetMapping("/cpf-cnpj")
+    public ResponseEntity<ClienteResponseDto> findByCpfCnpj(@RequestParam String documento) {
+        ClienteResponseDto obj = clienteService.findByDoc(documento);
         return ResponseEntity.ok().body(obj);
     }
 

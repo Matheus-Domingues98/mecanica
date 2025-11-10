@@ -43,6 +43,12 @@ public class OrderMapper {
                 carroModelo,
                 order.getStatus(),
                 order.isAtivo(),
+                order.getValorTotal(),
+                order.getOrcamentoAprovado(),
+                order.getDataAprovacao(),
+                order.getDataCriacao(),
+                order.getDataInicioExecucao(),
+                order.getDataFinalizacao(),
                 produtos,
                 servicos
         );
