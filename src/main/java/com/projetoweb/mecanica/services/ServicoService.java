@@ -2,6 +2,7 @@ package com.projetoweb.mecanica.services;
 
 import com.projetoweb.mecanica.dto.ServicoDto;
 import com.projetoweb.mecanica.entities.Servico;
+import com.projetoweb.mecanica.exceptions.ResourceNotFoundException;
 import com.projetoweb.mecanica.repositories.ServicoRepository;
 import com.projetoweb.mecanica.mapper.ServicoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,29 +28,15 @@ public class ServicoService {
 
     @Transactional(readOnly = true)
     public ServicoDto findById(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID nao pode ser nulo");
-        }
         Servico entity = servicoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servico nao encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Servico", "ID", id));
         return ServicoMapper.toDto(entity);
     }
 
     @Transactional
     public ServicoDto insert(ServicoDto dto) {
-        if (dto == null) {
-            throw new IllegalArgumentException("ServicoDto nao pode ser nulo");
-        }
-        if (dto.getNome() == null || dto.getNome().trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome do servico nao pode ser vazio");
-        }
-        if (dto.getPreco() == null || dto.getPreco() < 0) {
-            throw new IllegalArgumentException("Preco deve ser maior ou igual a zero");
-        }
-        if (dto.getDuracaoMinutos() == null || dto.getDuracaoMinutos() <= 0) {
-            throw new IllegalArgumentException("Duracao deve ser maior que zero");
-        }
-
+        // Bean Validation já garante que dto, nome, preço e duração são válidos
+        
         Servico entity = new Servico();
         entity.setNomeServ(dto.getNome());
         entity.setDescricaoServ(dto.getDescricao());
@@ -63,24 +50,10 @@ public class ServicoService {
 
     @Transactional
     public ServicoDto update(Long id, ServicoDto dto) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID nao pode ser nulo");
-        }
-        if (dto == null) {
-            throw new IllegalArgumentException("ServicoDto nao pode ser nulo");
-        }
-        if (dto.getNome() == null || dto.getNome().trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome do servico nao pode ser vazio");
-        }
-        if (dto.getPreco() == null || dto.getPreco() < 0) {
-            throw new IllegalArgumentException("Preco deve ser maior ou igual a zero");
-        }
-        if (dto.getDuracaoMinutos() == null || dto.getDuracaoMinutos() <= 0) {
-            throw new IllegalArgumentException("Duracao deve ser maior que zero");
-        }
-
+        // Bean Validation já garante que dto, nome, preço e duração são válidos
+        
         Servico entity = servicoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servico nao encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Servico", "ID", id));
 
         entity.setNomeServ(dto.getNome());
         entity.setDescricaoServ(dto.getDescricao());
@@ -93,22 +66,15 @@ public class ServicoService {
 
     @Transactional
     public void delete(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID nao pode ser nulo");
-        }
-        servicoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servico nao encontrado com ID: " + id));
+        Servico entity = servicoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Servico", "ID", id));
         servicoRepository.deleteById(id);
     }
 
     @Transactional
     public ServicoDto desativar(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID nao pode ser nulo");
-        }
-
         Servico entity = servicoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servico nao encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Servico", "ID", id));
 
         entity.desativar();
         entity = servicoRepository.save(entity);
@@ -118,12 +84,8 @@ public class ServicoService {
 
     @Transactional
     public ServicoDto ativar(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID nao pode ser nulo");
-        }
-
         Servico entity = servicoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servico nao encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Servico", "ID", id));
 
         entity.ativar();
         entity = servicoRepository.save(entity);

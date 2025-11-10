@@ -75,6 +75,15 @@ public class CarroService {
         // Busca o carro pelo ID
         Carro entity = findByIdEntity(id);
 
+        // Validação de negócio: verificar duplicidade de placa ao atualizar
+        if (!entity.getPlaca().equals(obj.getPlaca())) {
+            carroRepository.findByPlaca(obj.getPlaca()).ifPresent(c -> {
+                if (!c.getId().equals(id)) {
+                    throw new DuplicateResourceException("Carro", "placa", obj.getPlaca());
+                }
+            });
+        }
+
         // Atualiza os campos
         entity.setModelo(obj.getModelo());
         entity.setMarca(obj.getMarca());

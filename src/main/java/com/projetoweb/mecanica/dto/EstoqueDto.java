@@ -1,9 +1,17 @@
 package com.projetoweb.mecanica.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+
 public class EstoqueDto {
 
     private Long id;
+    
+    @NotNull(message = "ID do produto é obrigatório")
     private Long produtoId;
+    
+    @NotNull(message = "Quantidade é obrigatória")
+    @PositiveOrZero(message = "Quantidade deve ser maior ou igual a zero")
     private Integer quantidade;
 
     public EstoqueDto() {

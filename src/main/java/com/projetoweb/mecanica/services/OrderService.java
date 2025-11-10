@@ -43,9 +43,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrderDto findById(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID nao pode ser nulo");
-        }
+        // Spring converte automaticamente path variable, não precisa validar null
         Order entity = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
         return OrderMapper.toDto(entity);
@@ -53,24 +51,15 @@ public class OrderService {
 
     @Transactional
     public OrderDto insert(OrderCreateDto dto) {
-        if (dto == null) {
-            throw new IllegalArgumentException("OrderCreateDto nao pode ser nulo");
-        }
-        if (dto.getClienteId() == null) {
-            throw new IllegalArgumentException("ID do cliente nao pode ser nulo");
-        }
-
+        // Bean Validation já garante que dto, clienteId e carroId não são nulos
+        
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente", "ID", dto.getClienteId()));
 
-        // Validar e buscar o carro
-        if (dto.getCarroId() == null) {
-            throw new IllegalArgumentException("ID do carro nao pode ser nulo");
-        }
         Carro carro = carroRepository.findById(dto.getCarroId())
                 .orElseThrow(() -> new ResourceNotFoundException("Carro", "ID", dto.getCarroId()));
 
-        // Validar se o carro pertence ao cliente
+        // Validação de negócio: carro pertence ao cliente
         if (!carro.getCliente().getId().equals(cliente.getId())) {
             throw new BusinessException("O carro selecionado nao pertence ao cliente informado");
         }
@@ -87,17 +76,12 @@ public class OrderService {
         // Adicionar produtos
         if (dto.getProdutos() != null && !dto.getProdutos().isEmpty()) {
             for (OrderCreateDto.ItemProdutoDto item : dto.getProdutos()) {
-                if (item.getProdutoId() == null) {
-                    throw new IllegalArgumentException("ID do produto nao pode ser nulo");
-                }
-                if (item.getQuantidade() == null || item.getQuantidade() <= 0) {
-                    throw new IllegalArgumentException("Quantidade do produto deve ser maior que zero");
-                }
-
+                // Bean Validation já garante que produtoId e quantidade são válidos
+                
                 Produto produto = produtoRepository.findById(item.getProdutoId())
                         .orElseThrow(() -> new ResourceNotFoundException("Produto", "ID", item.getProdutoId()));
 
-                // Validar estoque
+                // Validações de negócio: estoque
                 if (produto.getEstoque() == null) {
                     throw new BusinessException("Produto sem estoque cadastrado: " + produto.getNomeProd());
                 }
@@ -110,9 +94,7 @@ public class OrderService {
                     );
                 }
 
-                // Decrementar estoque
                 produto.getEstoque().decrementar(item.getQuantidade());
-
                 entity.adicionarProduto(produto, item.getQuantidade());
             }
         }
@@ -120,13 +102,8 @@ public class OrderService {
         // Adicionar serviços
         if (dto.getServicos() != null && !dto.getServicos().isEmpty()) {
             for (OrderCreateDto.ItemServicoDto item : dto.getServicos()) {
-                if (item.getServicoId() == null) {
-                    throw new IllegalArgumentException("ID do servico nao pode ser nulo");
-                }
-                if (item.getQuantidade() == null || item.getQuantidade() <= 0) {
-                    throw new IllegalArgumentException("Quantidade do servico deve ser maior que zero");
-                }
-
+                // Bean Validation já garante que servicoId e quantidade são válidos
+                
                 Servico servico = servicoRepository.findById(item.getServicoId())
                         .orElseThrow(() -> new ResourceNotFoundException("Servico", "ID", item.getServicoId()));
 
@@ -140,13 +117,7 @@ public class OrderService {
 
     @Transactional
     public OrderDto updateStatus(Long id, OrderStatus novoStatus) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID nao pode ser nulo");
-        }
-        if (novoStatus == null) {
-            throw new IllegalArgumentException("Status nao pode ser nulo");
-        }
-
+        // Path variable e request param são convertidos automaticamente pelo Spring
         Order entity = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
 
@@ -158,23 +129,23 @@ public class OrderService {
 
     @Transactional
     public void delete(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID nao pode ser nulo");
-        }
-        orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido nao encontrado com ID: " + id));
+        Order entity = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
         orderRepository.deleteById(id);
     }
 
     @Transactional
     public OrderDto cancelar(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID nao pode ser nulo");
-        }
-
         Order entity = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
 
+        if (entity.getOrderProdutos() != null) {
+            for (OrderProduto op : entity.getOrderProdutos()) {
+                if (op.getProduto().getEstoque() != null) {
+                    op.getProduto().getEstoque().incrementar(op.getQuantidade());
+                }
+            }
+        }
         entity.cancelar();
         entity = orderRepository.save(entity);
 
@@ -183,10 +154,6 @@ public class OrderService {
 
     @Transactional
     public OrderDto desativar(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID nao pode ser nulo");
-        }
-
         Order entity = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
 
@@ -198,10 +165,6 @@ public class OrderService {
 
     @Transactional
     public OrderDto ativar(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID nao pode ser nulo");
-        }
-
         Order entity = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
 
@@ -222,23 +185,12 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderDto> findByClienteId(Long clienteId) {
-        if (clienteId == null) {
-            throw new IllegalArgumentException("ID do cliente nao pode ser nulo");
-        }
-
-        List<Order> orders = orderRepository.findAll();
-        return orders.stream()
-                .filter(order -> order.getCliente() != null && order.getCliente().getId().equals(clienteId))
-                .map(OrderMapper::toDto)
-                .toList();
+        List<Order> orders = orderRepository.findByClienteId(clienteId);
+        return orders.stream().map(OrderMapper::toDto).toList();
     }
 
     @Transactional(readOnly = true)
     public List<OrderDto> findByStatus(OrderStatus status) {
-        if (status == null) {
-            throw new IllegalArgumentException("Status nao pode ser nulo");
-        }
-
         List<Order> orders = orderRepository.findAll();
         return orders.stream()
                 .filter(order -> order.getStatus() == status)

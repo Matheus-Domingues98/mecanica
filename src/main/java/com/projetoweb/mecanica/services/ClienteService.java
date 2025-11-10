@@ -77,6 +77,24 @@ public class ClienteService {
         // Busca o cliente pelo ID
         Cliente entity = findByIdEntity(id);
 
+        // Verifica se o novo documento já existe em outro cliente
+        if (!entity.getDoc().equals(obj.getDoc())) {
+            clienteRepository.findByDoc(obj.getDoc()).ifPresent(c -> {
+                if (!c.getId().equals(id)) {
+                    throw new DuplicateResourceException("Cliente", "documento", obj.getDoc());
+                }
+            });
+        }
+
+        // Verifica se o novo email já existe em outro cliente
+        if (!entity.getEmail().equals(obj.getEmail())) {
+            clienteRepository.findByEmail(obj.getEmail()).ifPresent(c -> {
+                if (!c.getId().equals(id)) {
+                    throw new DuplicateResourceException("Cliente", "email", obj.getEmail());
+                }
+            });
+        }
+
         // Atualiza os campos
         entity.setNome(obj.getNome());
         entity.setDoc(obj.getDoc());
