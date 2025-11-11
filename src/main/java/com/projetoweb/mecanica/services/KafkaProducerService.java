@@ -23,46 +23,46 @@ public class KafkaProducerService {
     }
 
     public void sendOrderCreatedEvent(OrderEventDto orderEvent) {
-        logger.info("Sending order created event: {}", orderEvent);
+        logger.info("Enviando evento de pedido criado: {}", orderEvent);
         CompletableFuture<SendResult<String, Object>> future = 
             kafkaTemplate.send(KafkaConfig.ORDER_CREATED_TOPIC, orderEvent.getOrderId().toString(), orderEvent);
         
         future.whenComplete((result, ex) -> {
             if (ex == null) {
-                logger.info("Order created event sent successfully: orderId={}, offset={}", 
+                logger.info("Evento de pedido criado enviado com sucesso: orderId={}, offset={}", 
                     orderEvent.getOrderId(), result.getRecordMetadata().offset());
             } else {
-                logger.error("Failed to send order created event: orderId={}", orderEvent.getOrderId(), ex);
+                logger.error("Falha ao enviar evento de pedido criado: orderId={}", orderEvent.getOrderId(), ex);
             }
         });
     }
 
     public void sendOrderUpdatedEvent(OrderEventDto orderEvent) {
-        logger.info("Sending order updated event: {}", orderEvent);
+        logger.info("Enviando evento de pedido atualizado: {}", orderEvent);
         CompletableFuture<SendResult<String, Object>> future = 
             kafkaTemplate.send(KafkaConfig.ORDER_UPDATED_TOPIC, orderEvent.getOrderId().toString(), orderEvent);
         
         future.whenComplete((result, ex) -> {
             if (ex == null) {
-                logger.info("Order updated event sent successfully: orderId={}, offset={}", 
+                logger.info("Evento de pedido atualizado enviado com sucesso: orderId={}, offset={}", 
                     orderEvent.getOrderId(), result.getRecordMetadata().offset());
             } else {
-                logger.error("Failed to send order updated event: orderId={}", orderEvent.getOrderId(), ex);
+                logger.error("Falha ao enviar evento de pedido atualizado: orderId={}", orderEvent.getOrderId(), ex);
             }
         });
     }
 
     public void sendPaymentProcessedEvent(PaymentEventDto paymentEvent) {
-        logger.info("Sending payment processed event: {}", paymentEvent);
+        logger.info("Enviando evento de pagamento processado: {}", paymentEvent);
         CompletableFuture<SendResult<String, Object>> future = 
             kafkaTemplate.send(KafkaConfig.PAYMENT_PROCESSED_TOPIC, paymentEvent.getPaymentId().toString(), paymentEvent);
         
         future.whenComplete((result, ex) -> {
             if (ex == null) {
-                logger.info("Payment processed event sent successfully: paymentId={}, offset={}", 
+                logger.info("Evento de pagamento processado enviado com sucesso: paymentId={}, offset={}", 
                     paymentEvent.getPaymentId(), result.getRecordMetadata().offset());
             } else {
-                logger.error("Failed to send payment processed event: paymentId={}", paymentEvent.getPaymentId(), ex);
+                logger.error("Falha ao enviar evento de pagamento processado: paymentId={}", paymentEvent.getPaymentId(), ex);
             }
         });
     }

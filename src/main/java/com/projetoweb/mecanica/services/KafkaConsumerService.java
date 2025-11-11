@@ -15,7 +15,7 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = KafkaConfig.ORDER_CREATED_TOPIC, groupId = "${spring.kafka.consumer.group-id}")
     public void consumeOrderCreatedEvent(OrderEventDto orderEvent) {
-        logger.info("Received order created event: {}", orderEvent);
+        logger.info("Evento de pedido criado recebido: {}", orderEvent);
         
         // Aqui você pode adicionar lógica de negócio
         // Por exemplo: enviar notificação, atualizar estoque, etc.
@@ -24,7 +24,7 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = KafkaConfig.ORDER_UPDATED_TOPIC, groupId = "${spring.kafka.consumer.group-id}")
     public void consumeOrderUpdatedEvent(OrderEventDto orderEvent) {
-        logger.info("Received order updated event: {}", orderEvent);
+        logger.info("Evento de pedido atualizado recebido: {}", orderEvent);
         
         // Aqui você pode adicionar lógica de negócio
         processOrderUpdated(orderEvent);
@@ -32,14 +32,14 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = KafkaConfig.PAYMENT_PROCESSED_TOPIC, groupId = "${spring.kafka.consumer.group-id}")
     public void consumePaymentProcessedEvent(PaymentEventDto paymentEvent) {
-        logger.info("Received payment processed event: {}", paymentEvent);
+        logger.info("Evento de pagamento processado recebido: {}", paymentEvent);
         
         // Aqui você pode adicionar lógica de negócio
         processPaymentProcessed(paymentEvent);
     }
 
     private void processOrderCreated(OrderEventDto orderEvent) {
-        logger.info("Processing order created: orderId={}, status={}", 
+        logger.info("Processando pedido criado: orderId={}, status={}", 
             orderEvent.getOrderId(), orderEvent.getStatus());
         
         // Exemplo de lógica:
@@ -49,7 +49,7 @@ public class KafkaConsumerService {
     }
 
     private void processOrderUpdated(OrderEventDto orderEvent) {
-        logger.info("Processing order updated: orderId={}, status={}", 
+        logger.info("Processando pedido atualizado: orderId={}, status={}", 
             orderEvent.getOrderId(), orderEvent.getStatus());
         
         // Exemplo de lógica:
@@ -58,7 +58,7 @@ public class KafkaConsumerService {
     }
 
     private void processPaymentProcessed(PaymentEventDto paymentEvent) {
-        logger.info("Processing payment: paymentId={}, orderId={}, status={}", 
+        logger.info("Processando pagamento: paymentId={}, orderId={}, status={}", 
             paymentEvent.getPaymentId(), paymentEvent.getOrderId(), paymentEvent.getStatus());
         
         // Exemplo de lógica:
