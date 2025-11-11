@@ -1,0 +1,705 @@
+{
+  "info": {
+    "name": "Mecânica API",
+    "description": "Collection completa para testar a API de Mecânica",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "clienteId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "carroId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "produtoId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "servicoId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "orderId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "Criar Cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"doc\": \"12345678901\",\n  \"telefone\": \"(11) 98765-4321\",\n  \"email\": \"joao.silva@email.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes"]
+            }
+          }
+        },
+        {
+          "name": "Listar Todos os Clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Cliente por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/{{clienteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", "{{clienteId}}"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Cliente por CPF/CNPJ",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/doc/12345678901",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", "doc", "12345678901"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva Santos\",\n  \"doc\": \"12345678901\",\n  \"telefone\": \"(11) 98765-4321\",\n  \"email\": \"joao.santos@email.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/clientes/{{clienteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", "{{clienteId}}"]
+            }
+          }
+        },
+        {
+          "name": "Inativar Cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/inativar/{{clienteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", "inativar", "{{clienteId}}"]
+            }
+          }
+        },
+        {
+          "name": "Deletar Cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/{{clienteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", "{{clienteId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Carros",
+      "item": [
+        {
+          "name": "Criar Carro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelo\": \"Civic\",\n  \"marca\": \"Honda\",\n  \"anoFabricacao\": 2020,\n  \"placa\": \"ABC1234\",\n  \"cor\": \"Preto\",\n  \"clienteId\": {{clienteId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/carros",
+              "host": ["{{baseUrl}}"],
+              "path": ["carros"]
+            }
+          }
+        },
+        {
+          "name": "Listar Todos os Carros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/carros",
+              "host": ["{{baseUrl}}"],
+              "path": ["carros"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Carro por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/carros/{{carroId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carros", "{{carroId}}"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Carro por Placa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/carros/placa/ABC1234",
+              "host": ["{{baseUrl}}"],
+              "path": ["carros", "placa", "ABC1234"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Carro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelo\": \"Civic EX\",\n  \"marca\": \"Honda\",\n  \"anoFabricacao\": 2020,\n  \"placa\": \"ABC1234\",\n  \"cor\": \"Preto Perolizado\",\n  \"clienteId\": {{clienteId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/carros/{{carroId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carros", "{{carroId}}"]
+            }
+          }
+        },
+        {
+          "name": "Deletar Carro",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/carros/{{carroId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carros", "{{carroId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produtos",
+      "item": [
+        {
+          "name": "Criar Produto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Óleo Motor 5W30\",\n  \"preco\": 45.90\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/produtos",
+              "host": ["{{baseUrl}}"],
+              "path": ["produtos"]
+            }
+          }
+        },
+        {
+          "name": "Listar Todos os Produtos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtos",
+              "host": ["{{baseUrl}}"],
+              "path": ["produtos"]
+            }
+          }
+        },
+        {
+          "name": "Listar Produtos Ativos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtos/ativos",
+              "host": ["{{baseUrl}}"],
+              "path": ["produtos", "ativos"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Produto por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtos/{{produtoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["produtos", "{{produtoId}}"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Produto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Óleo Motor 5W30 Sintético\",\n  \"preco\": 55.90\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/produtos/{{produtoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["produtos", "{{produtoId}}"]
+            }
+          }
+        },
+        {
+          "name": "Desativar Produto",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtos/{{produtoId}}/desativar",
+              "host": ["{{baseUrl}}"],
+              "path": ["produtos", "{{produtoId}}", "desativar"]
+            }
+          }
+        },
+        {
+          "name": "Ativar Produto",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtos/{{produtoId}}/ativar",
+              "host": ["{{baseUrl}}"],
+              "path": ["produtos", "{{produtoId}}", "ativar"]
+            }
+          }
+        },
+        {
+          "name": "Deletar Produto",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtos/{{produtoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["produtos", "{{produtoId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Serviços",
+      "item": [
+        {
+          "name": "Criar Serviço",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Troca de Óleo\",\n  \"descricao\": \"Troca de óleo do motor com filtro\",\n  \"preco\": 80.00,\n  \"duracaoMinutos\": 30\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/servicos",
+              "host": ["{{baseUrl}}"],
+              "path": ["servicos"]
+            }
+          }
+        },
+        {
+          "name": "Listar Todos os Serviços",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicos",
+              "host": ["{{baseUrl}}"],
+              "path": ["servicos"]
+            }
+          }
+        },
+        {
+          "name": "Listar Serviços Ativos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicos/ativos",
+              "host": ["{{baseUrl}}"],
+              "path": ["servicos", "ativos"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Serviço por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicos/{{servicoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["servicos", "{{servicoId}}"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Serviço",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Troca de Óleo Premium\",\n  \"descricao\": \"Troca de óleo sintético premium com filtro de alta performance\",\n  \"preco\": 120.00,\n  \"duracaoMinutos\": 45\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/servicos/{{servicoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["servicos", "{{servicoId}}"]
+            }
+          }
+        },
+        {
+          "name": "Desativar Serviço",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicos/{{servicoId}}/desativar",
+              "host": ["{{baseUrl}}"],
+              "path": ["servicos", "{{servicoId}}", "desativar"]
+            }
+          }
+        },
+        {
+          "name": "Ativar Serviço",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicos/{{servicoId}}/ativar",
+              "host": ["{{baseUrl}}"],
+              "path": ["servicos", "{{servicoId}}", "ativar"]
+            }
+          }
+        },
+        {
+          "name": "Deletar Serviço",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicos/{{servicoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["servicos", "{{servicoId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Criar Ordem de Serviço",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": {{clienteId}},\n  \"carroId\": {{carroId}},\n  \"produtos\": [\n    {\n      \"produtoId\": 1,\n      \"quantidade\": 1\n    },\n    {\n      \"produtoId\": 2,\n      \"quantidade\": 1\n    }\n  ],\n  \"servicos\": [\n    {\n      \"servicoId\": 1,\n      \"quantidade\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
+            }
+          }
+        },
+        {
+          "name": "Listar Todas as Ordens",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
+            }
+          }
+        },
+        {
+          "name": "Listar Ordens Ativas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/ativos",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "ativos"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Ordem por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Ordens por Cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/cliente/{{clienteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "cliente", "{{clienteId}}"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Ordens por Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/status/RECEBIDO",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "status", "RECEBIDO"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}/status?status=EM_DIAGNOSTICO",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "EM_DIAGNOSTICO"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Enviar para Aprovação",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}/enviar-aprovacao",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}", "enviar-aprovacao"]
+            }
+          }
+        },
+        {
+          "name": "Aprovar Orçamento",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}/aprovar-orcamento",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}", "aprovar-orcamento"]
+            }
+          }
+        },
+        {
+          "name": "Rejeitar Orçamento",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}/rejeitar-orcamento",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}", "rejeitar-orcamento"]
+            }
+          }
+        },
+        {
+          "name": "Finalizar Ordem",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}/finalizar",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}", "finalizar"]
+            }
+          }
+        },
+        {
+          "name": "Entregar Ordem",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}/entregar",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}", "entregar"]
+            }
+          }
+        },
+        {
+          "name": "Cancelar Ordem",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}/cancelar",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}", "cancelar"]
+            }
+          }
+        },
+        {
+          "name": "Desativar Ordem",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}/desativar",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}", "desativar"]
+            }
+          }
+        },
+        {
+          "name": "Ativar Ordem",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}/ativar",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}", "ativar"]
+            }
+          }
+        },
+        {
+          "name": "Obter Estatísticas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/statistics",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "statistics"]
+            }
+          }
+        },
+        {
+          "name": "Deletar Ordem",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
